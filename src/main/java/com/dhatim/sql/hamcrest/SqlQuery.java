@@ -4,7 +4,6 @@ import com.dhatim.sql.lang.PSQLLexer;
 import com.dhatim.sql.lang.PSQLParser;
 import com.dhatim.sql.lang.PSQLParser.SqlContext;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -113,7 +112,7 @@ public class SqlQuery {
     
     private final PSQLParser parser;
     private final SqlContext tree;
-    private final Collection<ParseTree> current;
+    private final List<ParseTree> currentElements;
     
     private SqlQuery(PSQLParser parser) {
         this(parser, parser.sql());
@@ -123,27 +122,35 @@ public class SqlQuery {
         this(parser, tree, Arrays.asList(tree));
     }
     
-    private SqlQuery(PSQLParser parser, SqlContext tree, Collection<ParseTree> current) {
+    private SqlQuery(PSQLParser parser, SqlContext tree, List<ParseTree> current) {
         this.parser = parser;
         this.tree = tree;
-        this.current = current;
+        this.currentElements = current;
     }
     
     public SqlQuery derive(String xpath) {
-        List<ParseTree> list = current.stream().flatMap(p -> XPath.findAll(p, xpath, parser).stream()).collect(Collectors.toList());
+        List<ParseTree> list = currentElements.stream().flatMap(p -> XPath.findAll(p, xpath, parser).stream()).collect(Collectors.toList());
         return new SqlQuery(parser, tree, list);
     }
     
-    public Collection<ParseTree> getChildren() {
-        return Collections.unmodifiableCollection(current);
+    public SqlQuery derive(int fromIndex, int toIndex) {
+        return new SqlQuery(parser, tree, getChildren().subList(fromIndex, toIndex));
+    }
+    
+    public List<ParseTree> getChildren() {
+        return Collections.unmodifiableList(currentElements);
+    }
+    
+    public List<String> getTextChildren() {
+        return getChildren().stream().map(ParseTree::getText).collect(Collectors.toList());
     }
     
     public Stream<String> getTextStream() {
-        return current.stream().map(ParseTree::getText);
+        return currentElements.stream().map(ParseTree::getText);
     }
     
     public Stream<ParseTree> children() {
-        return current.stream();
+        return currentElements.stream();
     }
     
     public String toString() {

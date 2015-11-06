@@ -5,15 +5,15 @@ import java.util.stream.Collectors;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.hamcrest.Description;
 
-public class ValueMatcher<T> extends AbstractQueryMatcher {
+public class StringMatcher extends AbstractQueryMatcher {
 
-    private final T value;
-    private final boolean quoted;
+    private final String value;
+    private final boolean ignoreCase;
 
-    public ValueMatcher(String name, String xpath, T value, boolean quoted) {
+    public StringMatcher(String name, String xpath, String value, boolean ignoreCase) {
         super(name, xpath);
         this.value = value;
-        this.quoted = quoted;
+        this.ignoreCase = ignoreCase;
     }
 
     @Override
@@ -23,8 +23,7 @@ public class ValueMatcher<T> extends AbstractQueryMatcher {
 
     @Override
     protected boolean matchesSafely2(SqlQuery item) {
-        String stringValue = quoted ? String.format("'%s'", value.toString()) : value.toString();
-        return item.getTextStream().anyMatch(stringValue::equals);
+        return item.children().map(ParseTree::getText).anyMatch(ignoreCase ? value::equalsIgnoreCase : value::equals);
     }
 
     @Override

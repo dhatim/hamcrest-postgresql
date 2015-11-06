@@ -12,7 +12,7 @@ public class NotEmpty extends TypeSafeMatcher<SqlQuery> {
 
     @Override
     protected void describeMismatchSafely(SqlQuery actual, Description mismatchDescription) {
-        mismatchDescription.appendText(" was not empty");
+        mismatchDescription.appendText(" was not empty ").appendValueList("[", ", ", "]", actual.getTextChildren());
     }
 
     @Override

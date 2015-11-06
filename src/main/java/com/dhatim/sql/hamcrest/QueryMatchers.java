@@ -1,14 +1,21 @@
 package com.dhatim.sql.hamcrest;
 
+import static org.hamcrest.Matchers.*;
+
 import com.dhatim.sql.hamcrest.matcher.AllMatcher;
 import com.dhatim.sql.hamcrest.matcher.IdentifierMatcher;
 import com.dhatim.sql.hamcrest.matcher.NotEmpty;
+import com.dhatim.sql.hamcrest.matcher.Ordered;
+import com.dhatim.sql.hamcrest.matcher.StringMatcher;
+import com.dhatim.sql.hamcrest.matcher.ValueContainingMatcher;
 import com.dhatim.sql.hamcrest.matcher.ValueMatcher;
 import com.dhatim.sql.hamcrest.matcher.XPathMatcher;
 import org.hamcrest.Factory;
 import org.hamcrest.Matcher;
 
 public class QueryMatchers {
+    
+    private static final String NO_PATH = "";
     
     @SafeVarargs
     @Factory
@@ -43,6 +50,11 @@ public class QueryMatchers {
     }
     
     @Factory
+    public static Matcher<SqlQuery> where(Matcher<? super SqlQuery> matcher) {
+        return xpath("where", "//where_clause", matcher);
+    }
+    
+    @Factory
     public static Matcher<SqlQuery> table(Matcher<String> identifierMatcher) {
         return xpath("table", "//table_primary//table_name", identifier(identifierMatcher));
     }
@@ -65,17 +77,37 @@ public class QueryMatchers {
     @SafeVarargs
     @Factory
     public static Matcher<SqlQuery> leftJoin(Matcher<String> tableNameMatcher, Matcher<? super SqlQuery>... matchers) {
-        return join(allOf(value("join type", "//join_type", "left"), table(tableNameMatcher), allOf(matchers)));
+        return join(allOf(keyword("join type", "//join_type", "left"), table(tableNameMatcher), allOf(matchers)));
     }
     
     @Factory
     public static Matcher<SqlQuery> leftJoin(Matcher<String> tableNameMatcher) {
-        return join(allOf(value("join type", "//join_type", "left"), table(tableNameMatcher)));
+        return join(allOf(keyword("join type", "//join_type", "left"), table(tableNameMatcher)));
     }
     
     @Factory
     private static Matcher<SqlQuery> join(Matcher<? super SqlQuery> matcher) {
         return xpath("join", "//table_reference/joined_table/joined_table_primary", matcher);
+    }
+    
+    @Factory
+    public static Matcher<SqlQuery> equality(Matcher<? super SqlQuery> left, Matcher<? super SqlQuery> right) {
+        return xpath("equality", "//comparison_predicate/*", orderedAllOf(left, symbol("//comp_op", "="), right));
+    }
+    
+    @Factory
+    public static <T> Matcher<SqlQuery> equality(Matcher<? super SqlQuery> left, T right) {
+        return equality(left, value(right));
+    }
+    
+    @Factory
+    private static Matcher<SqlQuery> symbol(String xpath, String literal) {
+        return xpath(String.format("symbol '%s'", literal), String.format("%s//'%s'", xpath, literal), notEmpty());
+    }
+    
+    @Factory
+    public static Matcher<SqlQuery> symbol(String literal) {
+        return symbol("", literal);
     }
     
     /*@Factory
@@ -99,13 +131,58 @@ public class QueryMatchers {
     }*/
     
     @Factory
+    public static Matcher<SqlQuery> column(Matcher<String> columnNameMatcher) {
+        return xpath("column", "//column_reference", identifier(columnNameMatcher));
+    }
+    
+    @Factory
+    private static <T> Matcher<SqlQuery> value(T value) {
+        return new ValueMatcher<T>("value", NO_PATH, value, false);
+    }
+    
+    @Factory
+    public static Matcher<SqlQuery> literal(Number value) {
+        return new ValueMatcher<Number>("literal", NO_PATH, value, false);
+    }
+    
+    @Factory
+    public static Matcher<SqlQuery> literal(String value) {
+        return new ValueMatcher<String>("literal", NO_PATH, value, true);
+    }
+    
+    @Factory
+    public static <T> Matcher<SqlQuery> literal(T value) {
+        return new ValueMatcher<T>("literal", NO_PATH, value, false);
+    }
+    
+    @Factory
+    public static <T> Matcher<SqlQuery> quotedLiteral(T value) {
+        return new ValueMatcher<T>("quoted literal", NO_PATH, value, true);
+    }
+    
+    @Factory
+    public static <T> Matcher<SqlQuery> mayQuotedLiteral(T value) {
+        return anyOf(value(value), quotedLiteral(value));
+    }
+    
+    @Factory
+    public static <T> Matcher<SqlQuery> literalContaining(T value) {
+        return new ValueContainingMatcher<T>("literal containing", NO_PATH, value);
+    }
+    
+    @Factory
+    private static Matcher<SqlQuery> keyword(String name, String xpath, String keyword) {
+        return new StringMatcher(name, xpath, keyword, true);
+    }
+    
+    @Factory
     private static Matcher<SqlQuery> value(String name, String xpath, String value) {
-        return value(name, xpath, value, true);
+        return value(name, xpath, value, false);
     }
     
     @Factory
     private static Matcher<SqlQuery> value(String name, String xpath, String value, boolean ignoreCase) {
-        return new ValueMatcher(name, xpath, value, ignoreCase);
+        return new StringMatcher(name, xpath, value, ignoreCase);
     }
     
     @Factory
@@ -117,6 +194,12 @@ public class QueryMatchers {
     @Factory
     private static Matcher<SqlQuery> allOf(Matcher<? super SqlQuery>... matchers) {
         return AllMatcher.allOf(matchers);
+    }
+    
+    @SafeVarargs
+    @Factory
+    private static Matcher<SqlQuery> orderedAllOf(Matcher<? super SqlQuery>... matchers) {
+        return Ordered.allOf(matchers);
     }
     
     private static Matcher<SqlQuery> notEmpty() {

@@ -26,6 +26,7 @@ public class XPathMatcher extends AbstractQueryMatcher {
     @Override
     protected void describeMismatchSafely2(SqlQuery actual, Description mismatchDescription) {
         if (!matcher.matches(actual)) {
+            mismatchDescription.appendText(getName() + "/");
             matcher.describeMismatch(actual, mismatchDescription);
         }
     }

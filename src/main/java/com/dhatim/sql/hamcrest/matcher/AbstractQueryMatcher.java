@@ -16,14 +16,14 @@ public abstract class AbstractQueryMatcher extends TypeSafeMatcher<SqlQuery> imp
 
     @Override
     protected boolean matchesSafely(SqlQuery item) {
-        return matchesSafely2(item.derive(xpath));
+        return matchesSafely2(derive(item));
     }
     
     protected abstract boolean matchesSafely2(SqlQuery item);
     
     @Override
     protected void describeMismatchSafely(SqlQuery actual, Description mismatchDescription) {
-        describeMismatchSafely2(actual.derive(xpath), mismatchDescription);
+        describeMismatchSafely2(derive(actual), mismatchDescription);
     }
     
     protected abstract void describeMismatchSafely2(SqlQuery actual, Description mismatchDescription);
@@ -31,6 +31,10 @@ public abstract class AbstractQueryMatcher extends TypeSafeMatcher<SqlQuery> imp
     @Override
     public String getName() {
         return name;
+    }
+    
+    private SqlQuery derive(SqlQuery actual) {
+        return "".equals(xpath) ? actual : actual.derive(xpath);
     }
 
 }
