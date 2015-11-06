@@ -35,7 +35,7 @@ public class AllMatcher<T> extends DiagnosingMatcher<T> {
 
     /**
      * Creates a matcher that matches if the examined object matches <b>ALL</b> of the specified matchers.
-     * <p/>
+     * <p>
      * For example:
      * <pre>assertThat("myValue", allOf(startsWith("my"), containsString("Val")))</pre>
      */
@@ -46,7 +46,7 @@ public class AllMatcher<T> extends DiagnosingMatcher<T> {
 
     /**
      * Creates a matcher that matches if the examined object matches <b>ALL</b> of the specified matchers.
-     * <p/>
+     * <p>
      * For example:
      * <pre>assertThat("myValue", allOf(startsWith("my"), containsString("Val")))</pre>
      */
@@ -58,7 +58,7 @@ public class AllMatcher<T> extends DiagnosingMatcher<T> {
 
     /**
      * Creates a matcher that matches if the examined object matches <b>ALL</b> of the specified matchers.
-     * <p/>
+     * <p>
      * For example:
      * <pre>assertThat("myValue", allOf(startsWith("my"), containsString("Val")))</pre>
      */
@@ -72,7 +72,7 @@ public class AllMatcher<T> extends DiagnosingMatcher<T> {
 
     /**
      * Creates a matcher that matches if the examined object matches <b>ALL</b> of the specified matchers.
-     * <p/>
+     * <p>
      * For example:
      * <pre>assertThat("myValue", allOf(startsWith("my"), containsString("Val")))</pre>
      */
@@ -87,7 +87,7 @@ public class AllMatcher<T> extends DiagnosingMatcher<T> {
 
     /**
      * Creates a matcher that matches if the examined object matches <b>ALL</b> of the specified matchers.
-     * <p/>
+     * <p>
      * For example:
      * <pre>assertThat("myValue", allOf(startsWith("my"), containsString("Val")))</pre>
      */
@@ -103,7 +103,7 @@ public class AllMatcher<T> extends DiagnosingMatcher<T> {
 
     /**
      * Creates a matcher that matches if the examined object matches <b>ALL</b> of the specified matchers.
-     * <p/>
+     * <p>
      * For example:
      * <pre>assertThat("myValue", allOf(startsWith("my"), containsString("Val")))</pre>
      */
@@ -120,7 +120,7 @@ public class AllMatcher<T> extends DiagnosingMatcher<T> {
 
     /**
      * Creates a matcher that matches if the examined object matches <b>ALL</b> of the specified matchers.
-     * <p/>
+     * <p>
      * For example:
      * <pre>assertThat("myValue", allOf(startsWith("my"), containsString("Val")))</pre>
      */
