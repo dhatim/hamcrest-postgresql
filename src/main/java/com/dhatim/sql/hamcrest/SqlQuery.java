@@ -25,10 +25,18 @@ import org.antlr.v4.runtime.tree.xpath.XPath;
 public class SqlQuery {
     
     private static class ParserListener extends BaseErrorListener {
+        
+        private final boolean raiseErrors;
+
+        public ParserListener(boolean raiseErrors) {
+            this.raiseErrors = raiseErrors;
+        }
 
         @Override
         public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
-            throw new SqlParserException(msg, e);
+            if (raiseErrors) {
+                throw new SqlParserException(msg, e);
+            }
         }
         
     }
@@ -39,7 +47,7 @@ public class SqlQuery {
      * @return sql string parsed into a <code>SqlQuery</code> object
      */
     public static SqlQuery of(String sql) {
-        return new SqlQuery(parse(sql));
+        return new SqlQuery(parse(sql, true));
     }
     
     /**
@@ -47,7 +55,7 @@ public class SqlQuery {
      * @param sql
      */
     public static void printTree(String sql) {
-        PSQLParser parser = parse(sql);
+        PSQLParser parser = parse(sql, false);
         ParseTreeWalker walker = new ParseTreeWalker();
         walker.walk(new ParseTreeListener() {
 
@@ -98,15 +106,15 @@ public class SqlQuery {
         }, parser.sql());
     }
     
-    private static PSQLParser parse(String sql) {
+    private static PSQLParser parse(String sql, boolean raiseErrors) {
         CharStream inputStream = new ANTLRInputStream(sql);
         PSQLLexer lexer = new PSQLLexer(inputStream);
         lexer.removeErrorListeners();
-        lexer.addErrorListener(new ParserListener());
+        lexer.addErrorListener(new ParserListener(raiseErrors));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         PSQLParser parser = new PSQLParser(tokens);
         parser.removeErrorListeners();
-        parser.addErrorListener(new ParserListener());
+        parser.addErrorListener(new ParserListener(raiseErrors));
         return parser;
     }
     

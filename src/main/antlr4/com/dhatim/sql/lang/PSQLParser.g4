@@ -440,6 +440,7 @@ datetime_type
   | TIMESTAMP
   | TIMESTAMP WITH TIME ZONE
   | TIMESTAMPTZ
+  | INTERVAL
   ;
 
 bit_type
