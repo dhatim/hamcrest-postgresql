@@ -46,7 +46,8 @@ statement
   ;
 
 data_statement
-  : query_expression
+  : cte_expression query_expression
+  | query_expression
   ;
 
 data_change_statement
@@ -983,6 +984,32 @@ having_clause
 
 row_value_predicand_list
   : row_value_predicand (COMMA row_value_predicand)*
+  ;
+
+/*
+===============================================================================
+  7.13.2 <cte expression>
+===============================================================================
+*/
+  
+cte_expression
+  : WITH cte_expression_body
+  ;
+
+cte_expression_body
+  : cte_query (SEMI_COLON cte_query)*
+  ;
+  
+cte_query
+  : cte_name AS cte_primary
+  ;
+  
+cte_name
+  : identifier
+  ;
+  
+cte_primary
+  : LEFT_PAREN query_expression RIGHT_PAREN
   ;
 
 /*
