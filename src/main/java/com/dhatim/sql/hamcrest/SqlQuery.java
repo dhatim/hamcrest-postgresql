@@ -56,6 +56,10 @@ public class SqlQuery {
      */
     public static void printTree(String sql) {
         PSQLParser parser = parse(sql, false);
+        printTree("", parser.sql());
+    }
+    
+    private static void printTree(String indent, ParseTree tree) {
         ParseTreeWalker walker = new ParseTreeWalker();
         walker.walk(new ParseTreeListener() {
 
@@ -84,15 +88,15 @@ public class SqlQuery {
             }
             
             private String nameOf(int id) {
-                return parser.getRuleNames()[id];
+                return PSQLParser.ruleNames[id];
             }
             
             private String terminalNameOf(int type) {
-                return parser.getVocabulary().getDisplayName(type);
+                return PSQLLexer.VOCABULARY.getDisplayName(type);
             }
 
             private void ln(String s) {
-                System.out.println(toSpaces() + s);
+                System.out.println(indent + toSpaces() + s);
             }
 
             private String toSpaces() {
@@ -103,7 +107,7 @@ public class SqlQuery {
                 return Stream.generate(() -> " ").limit(n).collect(Collectors.joining());
             }
 
-        }, parser.sql());
+        }, tree);
     }
     
     private static PSQLParser parse(String sql, boolean raiseErrors) {
@@ -163,6 +167,14 @@ public class SqlQuery {
     
     public String toString() {
         return getTextStream().collect(Collectors.joining(", ", "[", "]"));
+    }
+    
+    public void printTree() {
+        System.out.println("[");
+        for (ParseTree tree : currentElements) {
+            printTree("   ", tree);
+        }
+        System.out.println("]");
     }
     
 }

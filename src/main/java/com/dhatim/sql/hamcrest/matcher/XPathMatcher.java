@@ -19,12 +19,12 @@ public class XPathMatcher extends AbstractQueryMatcher {
     }
 
     @Override
-    protected boolean matchesSafely2(SqlQuery item) {
+    protected boolean matchesSafelyDerived(SqlQuery item) {
         return matcher.matches(item);
     }
 
     @Override
-    protected void describeMismatchSafely2(SqlQuery actual, Description mismatchDescription) {
+    protected void describeMismatchSafelyDerived(SqlQuery actual, Description mismatchDescription) {
         if (!matcher.matches(actual)) {
             mismatchDescription.appendText(getName() + "/");
             matcher.describeMismatch(actual, mismatchDescription);

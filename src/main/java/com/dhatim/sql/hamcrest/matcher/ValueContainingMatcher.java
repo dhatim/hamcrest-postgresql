@@ -20,12 +20,12 @@ public class ValueContainingMatcher<T> extends AbstractQueryMatcher {
     }
 
     @Override
-    protected boolean matchesSafely2(SqlQuery item) {
+    protected boolean matchesSafelyDerived(SqlQuery item) {
         return item.getTextStream().anyMatch(s -> s.contains(value.toString()));
     }
 
     @Override
-    protected void describeMismatchSafely2(SqlQuery actual, Description mismatchDescription) {
+    protected void describeMismatchSafelyDerived(SqlQuery actual, Description mismatchDescription) {
         mismatchDescription.appendText(getName());
         mismatchDescription.appendText(" was ");
         mismatchDescription.appendValueList("[", ",", "]", actual.children().map(ParseTree::getText).collect(Collectors.toList()));

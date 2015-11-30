@@ -323,6 +323,7 @@ datetime_literal
   : timestamp_literal
   | time_literal
   | date_literal
+  | interval_literal
   ;
 
 time_literal
@@ -335,6 +336,10 @@ timestamp_literal
 
 date_literal
   : DATE date_string=Character_String_Literal
+  ;
+  
+interval_literal
+  : INTERVAL interval_string=Character_String_Literal
   ;
 
 boolean_literal

@@ -16,17 +16,17 @@ public abstract class AbstractQueryMatcher extends TypeSafeMatcher<SqlQuery> imp
 
     @Override
     protected boolean matchesSafely(SqlQuery item) {
-        return matchesSafely2(derive(item));
+        return matchesSafelyDerived(derive(item));
     }
     
-    protected abstract boolean matchesSafely2(SqlQuery item);
+    protected abstract boolean matchesSafelyDerived(SqlQuery item);
     
     @Override
     protected void describeMismatchSafely(SqlQuery actual, Description mismatchDescription) {
-        describeMismatchSafely2(derive(actual), mismatchDescription);
+        describeMismatchSafelyDerived(derive(actual), mismatchDescription);
     }
     
-    protected abstract void describeMismatchSafely2(SqlQuery actual, Description mismatchDescription);
+    protected abstract void describeMismatchSafelyDerived(SqlQuery actual, Description mismatchDescription);
 
     @Override
     public String getName() {

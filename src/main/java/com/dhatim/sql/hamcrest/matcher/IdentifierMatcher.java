@@ -23,12 +23,12 @@ public class IdentifierMatcher extends AbstractQueryMatcher {
     }
 
     @Override
-    protected boolean matchesSafely2(SqlQuery item) {
+    protected boolean matchesSafelyDerived(SqlQuery item) {
         return item.children().map(this::extractIdentifier).anyMatch(identifierMatcher::matches);
     }
 
     @Override
-    protected void describeMismatchSafely2(SqlQuery actual, Description mismatchDescription) {
+    protected void describeMismatchSafelyDerived(SqlQuery actual, Description mismatchDescription) {
         mismatchDescription.appendText(getName());
         mismatchDescription.appendText(" was ");
         mismatchDescription.appendValueList("[", ",", "]", actual.children().map(this::extractIdentifier).collect(Collectors.toList()));

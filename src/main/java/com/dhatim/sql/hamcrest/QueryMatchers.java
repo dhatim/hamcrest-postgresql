@@ -3,10 +3,12 @@ package com.dhatim.sql.hamcrest;
 import static org.hamcrest.Matchers.*;
 
 import com.dhatim.sql.hamcrest.matcher.AllMatcher;
+import com.dhatim.sql.hamcrest.matcher.DebugMatcher;
 import com.dhatim.sql.hamcrest.matcher.IdentifierMatcher;
 import com.dhatim.sql.hamcrest.matcher.NotEmpty;
 import com.dhatim.sql.hamcrest.matcher.Ordered;
 import com.dhatim.sql.hamcrest.matcher.StringMatcher;
+import com.dhatim.sql.hamcrest.matcher.TokenMatcher;
 import com.dhatim.sql.hamcrest.matcher.ValueContainingMatcher;
 import com.dhatim.sql.hamcrest.matcher.ValueMatcher;
 import com.dhatim.sql.hamcrest.matcher.XPathMatcher;
@@ -110,6 +112,12 @@ public class QueryMatchers {
         return symbol("", literal);
     }
     
+    @Factory
+    public static Matcher<SqlQuery> node(String nodeName) {
+        return new TokenMatcher(String.format("token '%s'", nodeName), "", nodeName);
+        //return xpath(String.format("node name '%s'", nodeName), nodeName, notEmpty());
+    }
+    
     /*@Factory
     public static WhereMatcher greater(OperandMatcher left, OperandMatcher right) {
         
@@ -130,9 +138,35 @@ public class QueryMatchers {
         
     }*/
     
+    @SafeVarargs
+    @Factory
+    public static Matcher<SqlQuery> call(Matcher<String> functionName, Matcher<SqlQuery>... params) {
+        return xpath("function", "//routine_invocation/*", orderedAllOf(xpath("function name", "//function_name/*", identifier(functionName)), xpath("arguments", "//sql_argument_list/*", orderedAllOf(params))));
+    }
+    
+    @Factory
+    public static Matcher<SqlQuery> add(Matcher<SqlQuery> leftMatcher, Matcher<SqlQuery> rightMatcher) {
+        return compute(leftMatcher, "+", rightMatcher);
+    }
+    
+    @Factory
+    public static Matcher<SqlQuery> sub(Matcher<SqlQuery> leftMatcher, Matcher<SqlQuery> rightMatcher) {
+        return compute(leftMatcher, "-", rightMatcher);
+    }
+    
+    @Factory
+    private static Matcher<SqlQuery> compute(Matcher<SqlQuery> leftMatcher, String operator, Matcher<SqlQuery> rightMatcher) {
+        return xpath(operator, "//numeric_value_expression/*", orderedAllOf(leftMatcher, symbol(operator), rightMatcher));
+    }
+    
     @Factory
     public static Matcher<SqlQuery> column(Matcher<String> columnNameMatcher) {
         return xpath("column", "//column_reference", identifier(columnNameMatcher));
+    }
+    
+    @Factory
+    public static Matcher<SqlQuery> column(String columnName) {
+        return column(equalTo(columnName));
     }
     
     @Factory
@@ -170,6 +204,16 @@ public class QueryMatchers {
         return new ValueContainingMatcher<T>("literal containing", NO_PATH, value);
     }
     
+    @Factory 
+    public static <T> Matcher<SqlQuery> intervalLiteral(String value) {
+        return xpath("interval", "//interval_literal/*", orderedAllOf(node("INTERVAL"), literal(value)));
+    }
+    
+    @Factory 
+    public static <T> Matcher<SqlQuery> dateLiteral(String value) {
+        return xpath("date", "//date_literal/*", literal(value));
+    }
+    
     @Factory
     private static Matcher<SqlQuery> keyword(String name, String xpath, String keyword) {
         return new StringMatcher(name, xpath, keyword, true);
@@ -204,6 +248,11 @@ public class QueryMatchers {
     
     private static Matcher<SqlQuery> notEmpty() {
         return new NotEmpty();
+    }
+    
+    @Factory 
+    private static Matcher<SqlQuery> print(Matcher<SqlQuery> query) {
+        return new DebugMatcher(query);
     }
     
 }
