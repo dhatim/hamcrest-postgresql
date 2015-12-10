@@ -236,13 +236,13 @@ public class QueryMatchers {
     
     @SafeVarargs
     @Factory
-    private static Matcher<SqlQuery> allOf(Matcher<? super SqlQuery>... matchers) {
+    public static Matcher<SqlQuery> allOf(Matcher<? super SqlQuery>... matchers) {
         return AllMatcher.allOf(matchers);
     }
     
     @SafeVarargs
     @Factory
-    private static Matcher<SqlQuery> orderedAllOf(Matcher<? super SqlQuery>... matchers) {
+    public static Matcher<SqlQuery> orderedAllOf(Matcher<? super SqlQuery>... matchers) {
         return Ordered.allOf(matchers);
     }
     
