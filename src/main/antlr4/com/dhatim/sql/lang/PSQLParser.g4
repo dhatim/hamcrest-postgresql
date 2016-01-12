@@ -616,6 +616,7 @@ cast_target
   6.25 <value expression>
 ===============================================================================
 */
+
 value_expression
   : common_value_expression
   | row_value_expression
@@ -626,6 +627,70 @@ common_value_expression
   : numeric_value_expression
   | string_value_expression
   | NULL
+  ;
+  
+window_value_expression
+  : window_function_invocation filter_clause? over_clause
+  ;
+  
+over_clause
+  : OVER window_name
+  | OVER LEFT_PAREN window_definition RIGHT_PAREN
+  ;  
+  
+window_function_invocation
+  : function_name LEFT_PAREN window_function_argument_list RIGHT_PAREN
+  | function_name LEFT_PAREN MULTIPLY RIGHT_PAREN
+  ;
+  
+window_function_argument_list
+  : value_expression (COMMA value_expression)*
+  ;
+  
+window_name
+  : identifier
+  ;
+  
+window_definition
+  : window_name? partition_clause? orderby_clause? frame_clause?
+  ;
+  
+partition_clause
+  : PARTITION BY partition_list
+  ;
+  
+partition_list
+  : value_expression (COMMA value_expression)*
+  ;
+
+frame_clause
+  : frame_type frame_start
+  | frame_type BETWEEN frame_start AND frame_end
+  ;
+  
+frame_type
+  : RANGE
+  | ROWS
+  ;
+  
+frame_start
+  : frame_bound
+  ;
+  
+frame_end
+  : frame_bound
+  ;
+  
+frame_bound
+  : UNBOUNDED PRECEDING
+  | frame_value PRECEDING
+  | CURRENT ROW
+  | frame_value FOLLOWING
+  | UNBOUNDED FOLLOWING
+  ;
+  
+frame_value
+  : common_value_expression
   ;
 
 /*
@@ -825,8 +890,21 @@ table_expression
     where_clause?
     groupby_clause?
     having_clause?
+    window_clause?
     orderby_clause?
     limit_clause?
+  ;
+  
+window_clause
+  : WINDOW window_element_list
+  ;
+  
+window_element_list
+  : window_element (COMMA window_element)*
+  ;
+  
+window_element
+  : window_name AS LEFT_PAREN window_definition RIGHT_PAREN 
   ;
 
 /*
@@ -1091,6 +1169,7 @@ select_sublist
 
 derived_column
   : value_expression as_clause?
+  | window_value_expression as_clause?
   ;
 
 qualified_asterisk
