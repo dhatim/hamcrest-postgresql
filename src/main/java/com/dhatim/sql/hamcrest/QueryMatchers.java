@@ -215,6 +215,11 @@ public class QueryMatchers {
     }
     
     @Factory
+    public static <T> Matcher<SqlQuery> overlaps() {
+        return xpath("overlaps", "//overlaps_predicate/*", keyword("overlaps keyword", NO_PATH, "overlaps"));
+    }
+    
+    @Factory
     private static Matcher<SqlQuery> keyword(String name, String xpath, String keyword) {
         return new StringMatcher(name, xpath, keyword, true);
     }

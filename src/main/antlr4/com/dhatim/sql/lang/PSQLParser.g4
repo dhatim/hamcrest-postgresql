@@ -1230,6 +1230,7 @@ predicate
   | pattern_matching_predicate // like predicate and other similar predicates
   | null_predicate
   | exists_predicate
+  | overlaps_predicate
   ;
 
 /*
@@ -1359,7 +1360,44 @@ some : SOME | ANY;
 exists_predicate
   : NOT? EXISTS s=table_subquery
   ;
+  
+/*
+==============================================================================================
+  8.9+ <overlaps predicate>
 
+  Specify a test for date overlaps.
+==============================================================================================
+*/
+overlaps_predicate
+  : overlaps_endpoint OVERLAPS overlaps_endpoint
+  ;
+
+overlaps_endpoint
+  : LEFT_PAREN date_literal COMMA date_literal RIGHT_PAREN
+  | LEFT_PAREN time_literal COMMA time_literal RIGHT_PAREN
+  | LEFT_PAREN timestamp_literal COMMA timestamp_literal RIGHT_PAREN
+  | LEFT_PAREN date_literal COMMA interval_literal RIGHT_PAREN
+  | LEFT_PAREN time_literal COMMA interval_literal RIGHT_PAREN
+  | LEFT_PAREN timestamp_literal COMMA interval_literal RIGHT_PAREN
+  | LEFT_PAREN overlaps_nonparenthesized_value_expression_primary COMMA date_literal RIGHT_PAREN
+  | LEFT_PAREN overlaps_nonparenthesized_value_expression_primary COMMA time_literal RIGHT_PAREN
+  | LEFT_PAREN overlaps_nonparenthesized_value_expression_primary COMMA timestamp_literal RIGHT_PAREN
+  | LEFT_PAREN date_literal COMMA overlaps_nonparenthesized_value_expression_primary RIGHT_PAREN
+  | LEFT_PAREN time_literal COMMA overlaps_nonparenthesized_value_expression_primary RIGHT_PAREN
+  | LEFT_PAREN timestamp_literal COMMA overlaps_nonparenthesized_value_expression_primary RIGHT_PAREN
+  | LEFT_PAREN overlaps_nonparenthesized_value_expression_primary COMMA overlaps_nonparenthesized_value_expression_primary RIGHT_PAREN
+  | LEFT_PAREN overlaps_nonparenthesized_value_expression_primary COMMA overlaps_nonparenthesized_value_expression_primary RIGHT_PAREN
+  | LEFT_PAREN overlaps_nonparenthesized_value_expression_primary COMMA overlaps_nonparenthesized_value_expression_primary RIGHT_PAREN
+  ;
+  
+overlaps_nonparenthesized_value_expression_primary
+  : column_reference
+  | set_function_specification
+  | scalar_subquery
+  | case_expression
+  | cast_specification
+  | routine_invocation
+  ;
 
 /*
 ==============================================================================================
