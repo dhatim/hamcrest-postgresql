@@ -160,6 +160,11 @@ public class QueryMatchers {
     }
     
     @Factory
+    public static Matcher<SqlQuery> concat(Matcher<SqlQuery> leftMatcher, Matcher<SqlQuery> rightMatcher) {
+        return xpath("concat", "//character_value_expression/*", orderedAllOf(leftMatcher, rightMatcher));
+    }
+    
+    @Factory
     public static Matcher<SqlQuery> column(Matcher<String> columnNameMatcher) {
         return xpath("column", "//column_reference", identifier(columnNameMatcher));
     }
