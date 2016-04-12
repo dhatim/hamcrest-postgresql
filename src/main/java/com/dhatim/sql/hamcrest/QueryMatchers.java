@@ -12,6 +12,7 @@ import com.dhatim.sql.hamcrest.matcher.TokenMatcher;
 import com.dhatim.sql.hamcrest.matcher.ValueContainingMatcher;
 import com.dhatim.sql.hamcrest.matcher.ValueMatcher;
 import com.dhatim.sql.hamcrest.matcher.XPathMatcher;
+import java.util.stream.Stream;
 import org.hamcrest.Factory;
 import org.hamcrest.Matcher;
 
@@ -162,6 +163,13 @@ public class QueryMatchers {
     @Factory
     public static Matcher<SqlQuery> concat(Matcher<SqlQuery> leftMatcher, Matcher<SqlQuery> rightMatcher) {
         return xpath("concat", "//character_value_expression/*", orderedAllOf(leftMatcher, rightMatcher));
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Factory
+    public static Matcher<SqlQuery> concat(Matcher<SqlQuery> leftMatcher, Matcher<SqlQuery> rightMatcher, Matcher<SqlQuery> thirdMatcher, Matcher<SqlQuery>... others) {
+        Matcher<SqlQuery>[] all = Stream.concat(Stream.of(leftMatcher, rightMatcher, thirdMatcher), Stream.of(others)).toArray(Matcher[]::new);
+        return xpath("concat", "//character_value_expression/*", orderedAllOf(all));
     }
     
     @Factory
