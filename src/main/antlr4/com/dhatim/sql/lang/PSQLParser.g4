@@ -236,6 +236,7 @@ nonreserved_keywords
   | OVERWRITE
   | PARTITION
   | PARTITIONS
+  | POSITION
   | PRECISION
   | PURGE
   | QUARTER
@@ -1442,6 +1443,12 @@ extended_datetime_field
 
 routine_invocation
   : function_name LEFT_PAREN sql_argument_list? RIGHT_PAREN
+  | POSITION LEFT_PAREN string_expression IN string_expression RIGHT_PAREN
+  ;
+  
+string_expression
+  : string_value_expression
+  | row_value_expression
   ;
 
 function_names_for_reserved_words

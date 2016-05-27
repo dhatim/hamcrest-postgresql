@@ -22,4 +22,9 @@ public class QueryMatchersTest {
         assertThat(sql("SELECT * FROM mytable m LEFT JOIN myothertable o ON my.id = o.outid"), query(from(table(equalToIgnoringCase("mytable")), leftJoin(equalToIgnoringCase("myothertable")))));
     }
     
+    @Test
+    public void testPosition() {
+        assertThat(sql("SELECT POSITION('3' IN '123456')"), query());
+    }
+    
 }
