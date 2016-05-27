@@ -1443,7 +1443,11 @@ extended_datetime_field
 
 routine_invocation
   : function_name LEFT_PAREN sql_argument_list? RIGHT_PAREN
-  | POSITION LEFT_PAREN string_expression IN string_expression RIGHT_PAREN
+  | position_invocation
+  ;
+  
+position_invocation
+  : POSITION LEFT_PAREN string_expression IN string_expression RIGHT_PAREN
   ;
   
 string_expression
