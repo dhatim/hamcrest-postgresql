@@ -15,6 +15,7 @@ import com.dhatim.sql.hamcrest.matcher.XPathMatcher;
 import java.util.stream.Stream;
 import org.hamcrest.Factory;
 import org.hamcrest.Matcher;
+import org.hamcrest.core.IsAnything;
 
 public class QueryMatchers {
     
@@ -146,6 +147,12 @@ public class QueryMatchers {
     }
     
     @Factory
+    public static <T> Matcher<SqlQuery> position(Matcher<SqlQuery> searched, Matcher<SqlQuery> text) {
+        return xpath("position", "//position_invocation/*", xpath("arguments", "//string_expression/*", orderedAllOf(searched, text)));
+    }
+    
+    
+    @Factory
     public static Matcher<SqlQuery> add(Matcher<SqlQuery> leftMatcher, Matcher<SqlQuery> rightMatcher) {
         return compute(leftMatcher, "+", rightMatcher);
     }
@@ -256,6 +263,11 @@ public class QueryMatchers {
     @Factory
     public static Matcher<SqlQuery> allOf(Matcher<? super SqlQuery>... matchers) {
         return AllMatcher.allOf(matchers);
+    }
+    
+    @Factory
+    public static Matcher<SqlQuery> any() {
+        return new IsAnything<SqlQuery>();
     }
     
     @SafeVarargs

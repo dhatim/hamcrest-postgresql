@@ -24,7 +24,7 @@ public class QueryMatchersTest {
     
     @Test
     public void testPosition() {
-        assertThat(sql("SELECT POSITION('3' IN '123456')"), query());
+        assertThat(sql("SELECT POSITION('3' IN '123456')"), query(position(any(), literal("123456"))));
     }
     
 }
