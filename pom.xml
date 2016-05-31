@@ -3,7 +3,7 @@
 
     <groupId>com.dhatim</groupId>
     <artifactId>hamcrest-postgresql</artifactId>
-    <version>0.0.13-SNAPSHOT</version>
+    <version>0.0.14</version>
     <packaging>jar</packaging>
 
     <name>Hamcrest-style matchers for Postgresql SQLs</name>
@@ -18,7 +18,7 @@
 
     <scm>
         <connection>scm:git:git@github.com:dhatim/hamcrest-postgresql.git</connection>
-        <tag>HEAD</tag>
+        <tag>v0.0.14</tag>
     </scm>
 
     <properties>
