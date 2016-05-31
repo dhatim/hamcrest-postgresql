@@ -27,4 +27,9 @@ public class QueryMatchersTest {
         assertThat(sql("SELECT POSITION('3' IN '123456')"), query(position(any(), literal("123456"))));
     }
     
+    @Test
+    public void testNot() {
+        assertThat(sql("SELECT NOT funcName('hello')"), query(not(call(is("funcName"), any()))));
+    }
+    
 }

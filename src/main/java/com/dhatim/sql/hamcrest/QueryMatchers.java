@@ -266,6 +266,11 @@ public class QueryMatchers {
     }
     
     @Factory
+    public static Matcher<SqlQuery> not(Matcher<SqlQuery> matcher) {
+        return xpath("not", "//boolean_factor/*", orderedAllOf(keyword("not keyword", NO_PATH, "not"), matcher));
+    }
+    
+    @Factory
     public static Matcher<SqlQuery> any() {
         return new IsAnything<SqlQuery>();
     }
