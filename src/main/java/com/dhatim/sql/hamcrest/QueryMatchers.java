@@ -27,6 +27,12 @@ public class QueryMatchers {
         return allOf(matchers);
     }
     
+    @SafeVarargs
+    @Factory
+    public static Matcher<SqlQuery> select(Matcher<? super SqlQuery>... matchers) {
+        return xpath("select", "//select_list", orderedAllOf(matchers));
+    }
+    
     @Factory
     public static Matcher<SqlQuery> from(Matcher<String> tableNameMatcher) {
         return from(table(tableNameMatcher));
@@ -77,6 +83,16 @@ public class QueryMatchers {
     public static FromMatcher innerJoin(String tableName, WhereMatcher... matchers) {
         
     }*/
+    
+    @Factory
+    public static Matcher<SqlQuery> cast(Matcher<? super SqlQuery> operand, String type) {
+        return xpath("primary", "//numeric_primary/*", orderedAllOf(xpath("operand", "//value_expression_primary", operand), node("::"), xpath("cast type", "//cast_target", keyword("//data_type", NO_PATH, type))));
+    }
+    
+    @Factory
+    public static Matcher<SqlQuery> nullCast(String type) {
+        return xpath("primary", "//common_value_expression/*", orderedAllOf(node("NULL"), node("::"), xpath("cast type", "//cast_target", keyword("//data_type", NO_PATH, type))));
+    }
     
     @SafeVarargs
     @Factory

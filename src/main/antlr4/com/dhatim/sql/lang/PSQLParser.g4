@@ -627,7 +627,7 @@ value_expression
 common_value_expression
   : numeric_value_expression
   | string_value_expression
-  | NULL
+  | NULL (CAST_EXPRESSION cast_target)*
   ;
   
 window_value_expression
