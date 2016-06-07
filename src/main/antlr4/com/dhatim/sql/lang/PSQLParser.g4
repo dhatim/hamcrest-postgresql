@@ -367,6 +367,7 @@ predefined_type
   | bit_type
   | binary_type
   | network_type
+  | json_type
   ;
 
 network_type
@@ -460,6 +461,11 @@ binary_type
   : BINARY type_length?
   | BINARY VARYING type_length?
   | VARBINARY type_length?
+  ;
+  
+json_type
+  : JSON
+  | JSONB
   ;
 
 /*

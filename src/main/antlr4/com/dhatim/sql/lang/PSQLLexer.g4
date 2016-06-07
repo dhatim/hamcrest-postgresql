@@ -151,6 +151,8 @@ INTO : I N T O;
 IS : I S;
 
 JOIN : J O I N;
+JSON : J S O N;
+JSONB : J S O N B;
 
 LEADING : L E A D I N G;
 LEFT : L E F T;

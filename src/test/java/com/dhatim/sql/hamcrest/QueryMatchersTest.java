@@ -32,4 +32,19 @@ public class QueryMatchersTest {
         assertThat(sql("SELECT NOT funcName('hello')"), query(not(call(is("funcName"), any()))));
     }
     
+    @Test
+    public void testCast() {
+        assertThat(sql("SELECT '5'::integer"), query(select(cast(literal("5"), "integer"))));
+    }
+    
+    @Test
+    public void testNullCast() {
+        assertThat(sql("SELECT NULL::integer"), query(select(nullCast("integer"))));
+    }
+    
+    @Test
+    public void testJsonCast() {
+        assertThat(sql("SELECT '{}'::jsonb"), query(select(cast(literal("{}"), "jsonb"))));
+    }
+    
 }
