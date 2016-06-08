@@ -47,4 +47,14 @@ public class QueryMatchersTest {
         assertThat(sql("SELECT '{}'::jsonb"), query(select(cast(literal("{}"), "jsonb"))));
     }
     
+    @Test
+    public void testRowSelect() {
+        assertThat(sql("SELECT 'E', (4, 'E')"), query(select(row(literal(4), literal("E")))));
+    }
+    
+    @Test
+    public void testRowWhere() {
+        assertThat(sql("SELECT * FROM t1 WHERE (col1, col2) = (1, 2)"), query());
+    }
+    
 }

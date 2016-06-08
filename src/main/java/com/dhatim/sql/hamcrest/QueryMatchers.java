@@ -100,6 +100,12 @@ public class QueryMatchers {
         return join(allOf(keyword("join type", "//join_type", "left"), table(tableNameMatcher), allOf(matchers)));
     }
     
+    @SafeVarargs
+    @Factory
+    public static Matcher<SqlQuery> row(Matcher<? super SqlQuery>... matchers) {
+        return xpath("row", "//row_value_constructor/*", orderedAllOf(matchers));
+    }
+    
     @Factory
     public static Matcher<SqlQuery> leftJoin(Matcher<String> tableNameMatcher) {
         return join(allOf(keyword("join type", "//join_type", "left"), table(tableNameMatcher)));
