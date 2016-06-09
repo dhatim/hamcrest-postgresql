@@ -118,6 +118,7 @@ AS : A S;
 ALL : A L L;
 AND : A N D;
 ANY : A N Y;
+ARRAY : A R R A Y;
 ASYMMETRIC : A S Y M M E T R I C;
 ASC : A S C;
 
@@ -356,6 +357,8 @@ BYTEA : B Y T E A; // alias for BLOB
 
 INET4 : I N E T '4';
 
+UUID : U U I D;
+
 // Operators
 Similar_To : '~';
 Not_Similar_To : '!~';
@@ -380,6 +383,8 @@ GTH   : '>';
 GEQ   : '>=';
 LEFT_PAREN :  '(';
 RIGHT_PAREN : ')';
+LEFT_BRACKET : '[';
+RIGHT_BRACKET : ']';
 PLUS  : '+';
 MINUS : '-';
 MULTIPLY: '*';

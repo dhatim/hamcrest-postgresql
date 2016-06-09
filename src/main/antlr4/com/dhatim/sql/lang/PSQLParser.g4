@@ -355,6 +355,11 @@ boolean_literal
 
 data_type
   : predefined_type
+  | array_type
+  ;
+  
+array_type
+  : predefined_type 
   ;
 
 predefined_type
@@ -368,6 +373,7 @@ predefined_type
   | binary_type
   | network_type
   | json_type
+  | uuid_type
   ;
 
 network_type
@@ -466,6 +472,10 @@ binary_type
 json_type
   : JSON
   | JSONB
+  ;
+  
+uuid_type
+  : UUID 
   ;
 
 /*
@@ -633,7 +643,16 @@ value_expression
 common_value_expression
   : numeric_value_expression
   | string_value_expression
-  | NULL (CAST_EXPRESSION cast_target)*
+  | null_value_expression
+  | null_casted_value_expression
+  ;
+  
+null_value_expression
+  : NULL
+  ; 
+  
+null_casted_value_expression
+  : NULL (CAST_EXPRESSION cast_target)+
   ;
   
 window_value_expression
@@ -720,13 +739,14 @@ factor
   : (sign)? numeric_primary
   ;
 
-array
-  : LEFT_PAREN numeric_value_expression (COMMA numeric_value_expression )* RIGHT_PAREN
-  ;
-
 numeric_primary
-  : value_expression_primary (CAST_EXPRESSION cast_target)*
+  : value_expression_primary
+  | casted_value_expression_primary
   | numeric_value_function
+  ;
+  
+casted_value_expression_primary
+  : value_expression_primary (CAST_EXPRESSION cast_target)+
   ;
 
 sign
@@ -1241,7 +1261,8 @@ subquery
 */
 
 predicate
-  : comparison_predicate
+  : quantified_comparison_predicate
+  | comparison_predicate
   | between_predicate
   | in_predicate
   | pattern_matching_predicate // like predicate and other similar predicates
@@ -1357,7 +1378,12 @@ null_predicate
 */
 
 quantified_comparison_predicate
-  : l=numeric_value_expression  c=comp_op q=quantifier s=table_subquery
+  : l=row_value_predicand  c=comp_op q=quantifier s=subquery_or_array
+  ;
+  
+subquery_or_array
+  : table_subquery
+  | LEFT_PAREN array_expression RIGHT_PAREN
   ;
 
 quantifier : all  | some ;
@@ -1365,6 +1391,28 @@ quantifier : all  | some ;
 all : ALL;
 
 some : SOME | ANY;
+
+array_expression
+  : literal_string_array_expression
+  | array_literal_constructor
+  ;
+  
+array_literal_constructor
+  : ARRAY LEFT_BRACKET (unsigned_literal (COMMA unsigned_literal)*)? RIGHT_BRACKET
+  ;
+  
+literal_string_array_expression
+  : non_casted_literal_string_array_expression
+  | casted_literal_string_array_expression
+  ;
+  
+non_casted_literal_string_array_expression
+  : Character_String_Literal
+  ;
+  
+casted_literal_string_array_expression
+  : Character_String_Literal (CAST_EXPRESSION array_type)+
+  ;
 
 /*
 ==============================================================================================

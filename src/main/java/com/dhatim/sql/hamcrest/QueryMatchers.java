@@ -86,12 +86,12 @@ public class QueryMatchers {
     
     @Factory
     public static Matcher<SqlQuery> cast(Matcher<? super SqlQuery> operand, String type) {
-        return xpath("primary", "//numeric_primary/*", orderedAllOf(xpath("operand", "//value_expression_primary", operand), node("::"), xpath("cast type", "//cast_target", keyword("//data_type", NO_PATH, type))));
+        return xpath("primary", "//casted_value_expression_primary/*", orderedAllOf(xpath("operand", "//value_expression_primary", operand), node("::"), keyword("type", "//cast_target", type)));
     }
     
     @Factory
     public static Matcher<SqlQuery> nullCast(String type) {
-        return xpath("primary", "//common_value_expression/*", orderedAllOf(node("NULL"), node("::"), xpath("cast type", "//cast_target", keyword("//data_type", NO_PATH, type))));
+        return xpath("primary", "//null_casted_value_expression/*", orderedAllOf(node("NULL"), node("::"), xpath("cast type", "//cast_target", keyword("//data_type", NO_PATH, type))));
     }
     
     @SafeVarargs

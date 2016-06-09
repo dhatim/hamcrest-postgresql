@@ -57,4 +57,9 @@ public class QueryMatchersTest {
         assertThat(sql("SELECT * FROM t1 WHERE (col1, col2) = (1, 2)"), query());
     }
     
+    @Test
+    public void testAnyUuidCast() {
+        assertThat(sql("SELECT * FROM t1 WHERE col1 = ANY('{}'::uuid)"), query());
+    }
+    
 }
