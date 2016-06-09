@@ -359,7 +359,11 @@ data_type
   ;
   
 array_type
-  : predefined_type 
+  : predefined_type array_dim+
+  ;
+  
+array_dim
+  : LEFT_BRACKET unsigned_integer_numeric_literal? RIGHT_BRACKET
   ;
 
 predefined_type
@@ -514,8 +518,16 @@ unsigned_value_specification
   ;
 
 unsigned_numeric_literal
+  : unsigned_integer_numeric_literal
+  | unsigned_real_numeric_literal
+  ;
+  
+unsigned_integer_numeric_literal
   : NUMBER
-  | REAL_NUMBER
+  ;
+  
+unsigned_real_numeric_literal
+  : REAL_NUMBER
   ;
 
 signed_numerical_literal
@@ -1395,6 +1407,7 @@ some : SOME | ANY;
 array_expression
   : literal_string_array_expression
   | array_literal_constructor
+  | routine_invocation
   ;
   
 array_literal_constructor
