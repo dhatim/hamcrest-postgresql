@@ -261,6 +261,10 @@ public class QueryMatchers {
         return xpath("overlaps", "//overlaps_predicate/*", keyword("overlaps keyword", NO_PATH, "overlaps"));
     }
     
+    public static Matcher<SqlQuery> like(Matcher<SqlQuery> operand, Matcher<SqlQuery> pattern) {
+        return xpath("like matcher", "//pattern_matching_predicate/*", orderedAllOf(operand, keyword("like keyword", NO_PATH, "like"), pattern));
+    }
+    
     @Factory
     private static Matcher<SqlQuery> keyword(String name, String xpath, String keyword) {
         return new StringMatcher(name, xpath, keyword, true);

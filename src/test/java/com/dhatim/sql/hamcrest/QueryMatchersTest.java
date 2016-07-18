@@ -62,4 +62,9 @@ public class QueryMatchersTest {
         assertThat(sql("SELECT * FROM t1 WHERE col1 = ANY('{}'::uuid[])"), query());
     }
     
+    @Test
+    public void testLike() {
+        assertThat(sql("SELECT * FROM t1 WHERE col1 LIKE '%Lorem'"), query(where(like(column("col1"), literal("%Lorem")))));
+    }
+    
 }
