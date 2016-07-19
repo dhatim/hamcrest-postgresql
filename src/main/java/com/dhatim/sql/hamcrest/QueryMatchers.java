@@ -217,6 +217,11 @@ public class QueryMatchers {
     }
     
     @Factory
+    public static Matcher<SqlQuery> uuidLiteral(String uuid) {
+        return new ValueMatcher<String>("literal", "//uuid_literal/*", uuid, true);
+    }
+    
+    @Factory
     public static Matcher<SqlQuery> literal(Number value) {
         return new ValueMatcher<Number>("literal", NO_PATH, value, false);
     }

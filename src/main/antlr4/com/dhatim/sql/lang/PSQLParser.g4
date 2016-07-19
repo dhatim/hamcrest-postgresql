@@ -318,6 +318,7 @@ general_literal
   : Character_String_Literal
   | datetime_literal
   | boolean_literal
+  | uuid_literal
   ;
 
 datetime_literal
@@ -345,6 +346,10 @@ interval_literal
 
 boolean_literal
   : TRUE | FALSE | UNKNOWN
+  ;
+  
+uuid_literal
+  : UUID uuid_string=Character_String_Literal
   ;
 
 /*

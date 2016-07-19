@@ -67,4 +67,14 @@ public class QueryMatchersTest {
         assertThat(sql("SELECT * FROM t1 WHERE col1 LIKE '%Lorem'"), query(where(like(column("col1"), literal("%Lorem")))));
     }
     
+    @Test
+    public void testUUIDLiteral() {
+        assertThat(sql("SELECT UUID 'c96ff414-8559-484c-bd43-c978130a5ee4'"), query(uuidLiteral("c96ff414-8559-484c-bd43-c978130a5ee4")));
+    }
+    
+    @Test
+    public void testDateLiteral() {
+        assertThat(sql("SELECT DATE '2010-10-10'"), query(dateLiteral("2010-10-10")));
+    }
+    
 }
