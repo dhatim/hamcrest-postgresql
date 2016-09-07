@@ -54,7 +54,7 @@ public class QueryMatchersTest {
     
     @Test
     public void testRowWhere() {
-        assertThat(sql("SELECT * FROM t1 WHERE (col1, col2) = (1, 2)"), query());
+        assertThat(sql("SELECT * FROM t1 WHERE (col1, col2) = (1, 2)"), query(where(equal(row(column("col1"), column("col2")), row(literal(1), literal(2))))));
     }
     
     @Test
@@ -75,6 +75,34 @@ public class QueryMatchersTest {
     @Test
     public void testDateLiteral() {
         assertThat(sql("SELECT DATE '2010-10-10'"), query(dateLiteral("2010-10-10")));
+    }
+    
+    @Test
+    public void testConds() {
+        assertThat(sql("SELECT * FROM t1 WHERE col1 = 1"), query(where(equal(column("col1"), literal(1)))));
+        assertThat(sql("SELECT * FROM t1 WHERE col1 > 1"), query(where(greater(column("col1"), literal(1)))));
+        assertThat(sql("SELECT * FROM t1 WHERE col1 < 1"), query(where(less(column("col1"), literal(1)))));
+        assertThat(sql("SELECT * FROM t1 WHERE col1 >= 1"), query(where(greaterEqual(column("col1"), literal(1)))));
+        assertThat(sql("SELECT * FROM t1 WHERE col1 <= 1"), query(where(lessEqual(column("col1"), literal(1)))));
+        assertThat(sql("SELECT * FROM t1 WHERE col1 <> 1"), query(where(unequal(column("col1"), literal(1)))));
+    }
+    
+    @Test
+    public void testAnd() {
+        assertThat(sql("SELECT * FROM t1 WHERE col1 = 1 AND col2 = 2"), query(where(and(equal(column("col1"), literal(1)), equal(column("col2"), literal(2))))));
+        assertThat(sql("SELECT * FROM t1 WHERE col1 = 1 AND col2 = 2 AND col3 = 3"), query(where(and(equal(column("col1"), literal(1)), equal(column("col2"), literal(2)), equal(column("col3"), literal(3))))));
+    }
+    
+    @Test
+    public void testOr() {
+        assertThat(sql("SELECT * FROM t1 WHERE col1 = 1 OR col2 = 2"), query(where(or(equal(column("col1"), literal(1)), equal(column("col2"), literal(2))))));
+        assertThat(sql("SELECT * FROM t1 WHERE col1 = 1 OR col2 = 2 OR col3 = 3"), query(where(or(equal(column("col1"), literal(1)), equal(column("col2"), literal(2)), equal(column("col3"), literal(3))))));
+    }
+    
+    @Test
+    public void testCompute() {
+        assertThat(sql("SELECT * FROM t1 WHERE col1 = 1 + 2"), query(where(equal(column("col1"), add(literal(1), literal(2))))));
+        assertThat(sql("SELECT * FROM t1 WHERE col1 = (1 + 2) * 5"), query(where(equal(column("col1"), mul(add(literal(1), literal(2)), literal(5))))));
     }
     
 }

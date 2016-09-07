@@ -117,8 +117,13 @@ public class QueryMatchers {
     }
     
     @Factory
+    private static Matcher<SqlQuery> comparison(String name, String operator, Matcher<? super SqlQuery> left, Matcher<? super SqlQuery> right) {
+        return xpath(name, "//comparison_predicate/*", orderedAllOf(left, symbol("//comp_op", operator), right));
+    }
+    
+    @Factory
     public static Matcher<SqlQuery> equality(Matcher<? super SqlQuery> left, Matcher<? super SqlQuery> right) {
-        return xpath("equality", "//comparison_predicate/*", orderedAllOf(left, symbol("//comp_op", "="), right));
+        return comparison("equality", "=", left, right);
     }
     
     @Factory
@@ -127,8 +132,78 @@ public class QueryMatchers {
     }
     
     @Factory
+    public static Matcher<SqlQuery> equal(Matcher<? super SqlQuery> left, Matcher<? super SqlQuery> right) {
+        return equality(left, right);
+    }
+    
+    @Factory
+    public static <T> Matcher<SqlQuery> equal(Matcher<? super SqlQuery> left, T right) {
+        return equality(left, right);
+    }
+    
+    @Factory
+    public static Matcher<SqlQuery> unequal(Matcher<? super SqlQuery> left, Matcher<? super SqlQuery> right) {
+        return xpath("unequality", "//comparison_predicate/*", orderedAllOf(left, token("//comp_op", "NOT_EQUAL"), right));
+    }
+    
+    @Factory
+    public static <T> Matcher<SqlQuery> unequal(Matcher<? super SqlQuery> left, T right) {
+        return unequal(left, right);
+    }
+    
+    @Factory
+    public static Matcher<SqlQuery> greaterEqual(Matcher<? super SqlQuery> left, Matcher<? super SqlQuery> right) {
+        return comparison("greaterEqual", ">=", left, right);
+    }
+    
+    @Factory
+    public static <T> Matcher<SqlQuery> greaterEqual(Matcher<? super SqlQuery> left, T right) {
+        return greaterEqual(left, value(right));
+    }
+    
+    @Factory
+    public static Matcher<SqlQuery> greater(Matcher<? super SqlQuery> left, Matcher<? super SqlQuery> right) {
+        return comparison("greater", ">", left, right);
+    }
+    
+    @Factory
+    public static <T> Matcher<SqlQuery> greater(Matcher<? super SqlQuery> left, T right) {
+        return greaterEqual(left, value(right));
+    }
+    
+    @Factory
+    public static Matcher<SqlQuery> lessEqual(Matcher<? super SqlQuery> left, Matcher<? super SqlQuery> right) {
+        return comparison("lessEqual", "<=", left, right);
+    }
+    
+    @Factory
+    public static <T> Matcher<SqlQuery> lessEqual(Matcher<? super SqlQuery> left, T right) {
+        return lessEqual(left, value(right));
+    }
+    
+    @Factory
+    public static Matcher<SqlQuery> less(Matcher<? super SqlQuery> left, Matcher<? super SqlQuery> right) {
+        return comparison("less", "<", left, right);
+    }
+    
+    @Factory
+    public static <T> Matcher<SqlQuery> less(Matcher<? super SqlQuery> left, T right) {
+        return less(left, value(right));
+    }
+    
+    @Factory
     private static Matcher<SqlQuery> symbol(String xpath, String literal) {
         return xpath(String.format("symbol '%s'", literal), String.format("%s//'%s'", xpath, literal), notEmpty());
+    }
+    
+    @Factory
+    private static Matcher<SqlQuery> token(String xpath, String token) {
+        return xpath(String.format("token %s", token), String.format("%s//%s", xpath, token), notEmpty());
+    }
+    
+    @Factory
+    private static Matcher<SqlQuery> token(String token) {
+        return token("", token);
     }
     
     @Factory
@@ -173,20 +248,34 @@ public class QueryMatchers {
         return xpath("position", "//position_invocation/*", xpath("arguments", "//string_expression/*", orderedAllOf(searched, text)));
     }
     
+    @Factory
+    private static Matcher<SqlQuery> compute(String name, String containerRule, Matcher<SqlQuery> leftMatcher, String operator, Matcher<SqlQuery> rightMatcher) {
+        return xpath(name, "//numeric_value_expression/*", orderedAllOf(rule(containerRule, containerRule, leftMatcher), symbol(operator), rule(containerRule, containerRule, rightMatcher)));
+    }
     
     @Factory
     public static Matcher<SqlQuery> add(Matcher<SqlQuery> leftMatcher, Matcher<SqlQuery> rightMatcher) {
-        return compute(leftMatcher, "+", rightMatcher);
+        return compute("addition", "term", leftMatcher, "+", rightMatcher);
     }
     
     @Factory
     public static Matcher<SqlQuery> sub(Matcher<SqlQuery> leftMatcher, Matcher<SqlQuery> rightMatcher) {
-        return compute(leftMatcher, "-", rightMatcher);
+        return compute("substraction", "term", leftMatcher, "-", rightMatcher);
     }
     
     @Factory
-    private static Matcher<SqlQuery> compute(Matcher<SqlQuery> leftMatcher, String operator, Matcher<SqlQuery> rightMatcher) {
-        return xpath(operator, "//numeric_value_expression/*", orderedAllOf(leftMatcher, symbol(operator), rightMatcher));
+    private static Matcher<SqlQuery> compute2(String name, String containerRule, Matcher<SqlQuery> leftMatcher, String operator, Matcher<SqlQuery> rightMatcher) {
+        return xpath(name, "//numeric_value_expression/term/*", orderedAllOf(rule(containerRule, containerRule, leftMatcher), symbol(operator), rule(containerRule, containerRule, rightMatcher)));
+    }
+    
+    @Factory
+    public static Matcher<SqlQuery> mul(Matcher<SqlQuery> leftMatcher, Matcher<SqlQuery> rightMatcher) {
+        return compute2("multiplication", "factor", leftMatcher, "*", rightMatcher);
+    }
+    
+    @Factory
+    public static Matcher<SqlQuery> div(Matcher<SqlQuery> leftMatcher, Matcher<SqlQuery> rightMatcher) {
+        return compute2("division", "factor", leftMatcher, "/", rightMatcher);
     }
     
     @Factory
@@ -290,6 +379,11 @@ public class QueryMatchers {
         return XPathMatcher.xpath(name, xpath, matcher);
     }
     
+    @Factory
+    private static Matcher<SqlQuery> rule(String name, String ruleName, Matcher<? super SqlQuery> matcher) {
+        return xpath(name, "//" + ruleName + "/*", matcher);
+    }
+    
     @SafeVarargs
     @Factory
     public static Matcher<SqlQuery> allOf(Matcher<? super SqlQuery>... matchers) {
@@ -299,6 +393,26 @@ public class QueryMatchers {
     @Factory
     public static Matcher<SqlQuery> not(Matcher<SqlQuery> matcher) {
         return xpath("not", "//boolean_factor/*", orderedAllOf(keyword("not keyword", NO_PATH, "not"), matcher));
+    }
+    
+    @Factory
+    public static Matcher<SqlQuery> and(Matcher<? super SqlQuery> left, Matcher<? super SqlQuery> right) {
+        return rule("and", "and_predicate", orderedAllOf(left, token("AND"), right));
+    }
+    
+    @Factory
+    public static Matcher<SqlQuery> and(Matcher<? super SqlQuery> left, Matcher<? super SqlQuery> middle, Matcher<? super SqlQuery> right) {
+        return rule("and", "and_predicate", orderedAllOf(left, token("AND"), middle, token("AND"), right));
+    }
+    
+    @Factory
+    public static Matcher<SqlQuery> or(Matcher<? super SqlQuery> left, Matcher<? super SqlQuery> right) {
+        return rule("or", "or_predicate", orderedAllOf(left, token("OR"), right));
+    }
+    
+    @Factory
+    public static Matcher<SqlQuery> or(Matcher<? super SqlQuery> left, Matcher<? super SqlQuery> middle, Matcher<? super SqlQuery> right) {
+        return rule("or", "or_predicate", orderedAllOf(left, token("OR"), middle, token("OR"), right));
     }
     
     @Factory
