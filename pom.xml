@@ -6,6 +6,10 @@
     <version>0.0.24-SNAPSHOT</version>
     <packaging>jar</packaging>
 
+    <prerequisites>
+        <maven>3.0</maven>
+    </prerequisites>
+
     <name>Hamcrest-style matchers for Postgresql SQLs</name>
     <url>https://github.com/dhatim/hamcrest-postgresql</url>
 
@@ -26,7 +30,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <compiler-plugin.version>3.3</compiler-plugin.version>
-        <antlr4.version>4.5.3</antlr4.version>
+        <antlr4.version>4.6</antlr4.version>
     </properties>
 
     <dependencies>
@@ -71,7 +75,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.9.1</version>
+                <version>1.10</version>
                 <executions>
                     <execution>
                         <id>add-sources</id>
@@ -88,7 +92,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.2</version>
+                <version>2.5.3</version>
                 <configuration>
                     <tagNameFormat>v@{project.version}</tagNameFormat>
                 </configuration>
