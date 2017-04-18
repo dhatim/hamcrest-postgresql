@@ -8,9 +8,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RecognitionException;
@@ -23,9 +23,9 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import org.antlr.v4.runtime.tree.xpath.XPath;
 
 public class SqlQuery {
-    
+
     private static class ParserListener extends BaseErrorListener {
-        
+
         private final boolean raiseErrors;
 
         public ParserListener(boolean raiseErrors) {
@@ -38,9 +38,9 @@ public class SqlQuery {
                 throw new SqlParserException(msg, e);
             }
         }
-        
+
     }
-    
+
     /**
      * Create parse of sql string
      * @param sql
@@ -49,7 +49,7 @@ public class SqlQuery {
     public static SqlQuery of(String sql) {
         return new SqlQuery(parse(sql, true));
     }
-    
+
     /**
      * For debugging purpose
      * @param sql
@@ -58,7 +58,7 @@ public class SqlQuery {
         PSQLParser parser = parse(sql, false);
         printTree("", parser.sql());
     }
-    
+
     private static void printTree(String indent, ParseTree tree) {
         ParseTreeWalker walker = new ParseTreeWalker();
         walker.walk(new ParseTreeListener() {
@@ -86,11 +86,11 @@ public class SqlQuery {
             public void visitTerminal(TerminalNode node) {
                 ln("| " + terminalNameOf(node.getSymbol().getType()) + " => " + node.getText());
             }
-            
+
             private String nameOf(int id) {
                 return PSQLParser.ruleNames[id];
             }
-            
+
             private String terminalNameOf(int type) {
                 return PSQLLexer.VOCABULARY.getDisplayName(type);
             }
@@ -102,16 +102,16 @@ public class SqlQuery {
             private String toSpaces() {
                 return space(spaces * 2);
             }
-            
+
             private String space(int n) {
                 return Stream.generate(() -> " ").limit(n).collect(Collectors.joining());
             }
 
         }, tree);
     }
-    
+
     private static PSQLParser parse(String sql, boolean raiseErrors) {
-        CharStream inputStream = new ANTLRInputStream(sql);
+        CharStream inputStream = CharStreams.fromString(sql);
         PSQLLexer lexer = new PSQLLexer(inputStream);
         lexer.removeErrorListeners();
         lexer.addErrorListener(new ParserListener(raiseErrors));
@@ -121,54 +121,55 @@ public class SqlQuery {
         parser.addErrorListener(new ParserListener(raiseErrors));
         return parser;
     }
-    
+
     private final PSQLParser parser;
     private final SqlContext tree;
     private final List<ParseTree> currentElements;
-    
+
     private SqlQuery(PSQLParser parser) {
         this(parser, parser.sql());
     }
-    
+
     private SqlQuery(PSQLParser parser, SqlContext tree) {
         this(parser, tree, Arrays.asList(tree));
     }
-    
+
     private SqlQuery(PSQLParser parser, SqlContext tree, List<ParseTree> current) {
         this.parser = parser;
         this.tree = tree;
         this.currentElements = current;
     }
-    
+
     public SqlQuery derive(String xpath) {
         List<ParseTree> list = currentElements.stream().flatMap(p -> XPath.findAll(p, xpath, parser).stream()).collect(Collectors.toList());
         return new SqlQuery(parser, tree, list);
     }
-    
+
     public SqlQuery derive(int fromIndex, int toIndex) {
         return new SqlQuery(parser, tree, getChildren().subList(fromIndex, toIndex));
     }
-    
+
     public List<ParseTree> getChildren() {
         return Collections.unmodifiableList(currentElements);
     }
-    
+
     public List<String> getTextChildren() {
         return getChildren().stream().map(ParseTree::getText).collect(Collectors.toList());
     }
-    
+
     public Stream<String> getTextStream() {
         return currentElements.stream().map(ParseTree::getText);
     }
-    
+
     public Stream<ParseTree> children() {
         return currentElements.stream();
     }
-    
+
+    @Override
     public String toString() {
         return getTextStream().collect(Collectors.joining(", ", "[", "]"));
     }
-    
+
     public void printTree() {
         System.out.println("[");
         for (ParseTree tree : currentElements) {
@@ -176,5 +177,5 @@ public class SqlQuery {
         }
         System.out.println("]");
     }
-    
+
 }
