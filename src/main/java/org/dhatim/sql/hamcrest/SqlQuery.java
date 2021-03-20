@@ -1,26 +1,17 @@
-package com.dhatim.sql.hamcrest;
+package org.dhatim.sql.hamcrest;
 
-import com.dhatim.sql.lang.PSQLLexer;
-import com.dhatim.sql.lang.PSQLParser;
-import com.dhatim.sql.lang.PSQLParser.SqlContext;
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.tree.*;
+import org.antlr.v4.runtime.tree.xpath.XPath;
+import org.dhatim.sql.lang.PSQLLexer;
+import org.dhatim.sql.lang.PSQLParser;
+import org.dhatim.sql.lang.PSQLParser.SqlContext;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.antlr.v4.runtime.BaseErrorListener;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.RecognitionException;
-import org.antlr.v4.runtime.Recognizer;
-import org.antlr.v4.runtime.tree.ErrorNode;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeListener;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.antlr.v4.runtime.tree.TerminalNode;
-import org.antlr.v4.runtime.tree.xpath.XPath;
 
 public class SqlQuery {
 
@@ -43,6 +34,7 @@ public class SqlQuery {
 
     /**
      * Create parse of sql string
+     *
      * @param sql
      * @return sql string parsed into a <code>SqlQuery</code> object
      */
@@ -52,6 +44,7 @@ public class SqlQuery {
 
     /**
      * For debugging purpose
+     *
      * @param sql
      */
     public static void printTree(String sql) {

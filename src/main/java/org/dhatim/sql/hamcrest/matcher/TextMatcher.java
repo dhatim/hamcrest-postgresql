@@ -1,11 +1,11 @@
-package com.dhatim.sql.hamcrest.matcher;
+package org.dhatim.sql.hamcrest.matcher;
 
-import com.dhatim.sql.hamcrest.SqlQuery;
+import org.dhatim.sql.hamcrest.SqlQuery;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
 public class TextMatcher extends TypeSafeMatcher<SqlQuery> implements NamedMatcher<SqlQuery> {
-    
+
     private final String xpath;
     private final String description;
     private final String text;

@@ -1,4 +1,4 @@
-package com.dhatim.sql.hamcrest.matcher;
+package org.dhatim.sql.hamcrest.matcher;
 
 import org.hamcrest.Matcher;
 

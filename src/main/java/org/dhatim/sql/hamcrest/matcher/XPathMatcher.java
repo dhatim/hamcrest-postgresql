@@ -1,11 +1,11 @@
-package com.dhatim.sql.hamcrest.matcher;
+package org.dhatim.sql.hamcrest.matcher;
 
-import com.dhatim.sql.hamcrest.SqlQuery;
+import org.dhatim.sql.hamcrest.SqlQuery;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
 public class XPathMatcher extends AbstractQueryMatcher {
-    
+
     private final Matcher<? super SqlQuery> matcher;
 
     public XPathMatcher(String name, String xpath, Matcher<? super SqlQuery> matcher) {
@@ -30,7 +30,7 @@ public class XPathMatcher extends AbstractQueryMatcher {
             matcher.describeMismatch(actual, mismatchDescription);
         }
     }
-    
+
     public static Matcher<SqlQuery> xpath(String name, String xpath, Matcher<? super SqlQuery> matcher) {
         return new XPathMatcher(name, xpath, matcher);
     }

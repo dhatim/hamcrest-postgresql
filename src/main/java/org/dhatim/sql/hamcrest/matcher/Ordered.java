@@ -1,10 +1,11 @@
-package com.dhatim.sql.hamcrest.matcher;
+package org.dhatim.sql.hamcrest.matcher;
 
-import com.dhatim.sql.hamcrest.SqlQuery;
+import org.dhatim.sql.hamcrest.SqlQuery;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+
 import org.hamcrest.Description;
 import org.hamcrest.Factory;
 import org.hamcrest.Matcher;
@@ -17,7 +18,7 @@ public class Ordered extends TypeSafeDiagnosingMatcher<SqlQuery> {
     public Ordered(Iterable<Matcher<? super SqlQuery>> matchers) {
         this.matchers = matchers;
     }
-    
+
     @Override
     protected boolean matchesSafely(SqlQuery item, Description mismatchDescription) {
         // Copy matchers
@@ -25,16 +26,16 @@ public class Ordered extends TypeSafeDiagnosingMatcher<SqlQuery> {
         for (Matcher<? super SqlQuery> m : matchers) {
             matcherList.add(m);
         }
-        
+
         int lastRemoveIndex = 0;
         for (int i=0; i<item.getChildren().size(); i++) {
             //System.out.println("DEBUG for " + i + "/" + item.getChildren().size());
             SqlQuery current = item.derive(i, i+1);
-            
+
             Matcher<? super SqlQuery> matcher = matcherList.getFirst();
             boolean match = matcher.matches(current);
             //System.out.println("DEBUG [" + matcherList.size() + "] match " + StringDescription.toString(matcher) + " on " + current.getTextChildren().toString() + " => " + match);
-            
+
             if (/*matcherList.getFirst().matches(current)*/match) {
                 matcherList.removeFirst();
                 lastRemoveIndex = i + 1;
@@ -43,7 +44,7 @@ public class Ordered extends TypeSafeDiagnosingMatcher<SqlQuery> {
                 }
             }
         }
-        
+
         if (matcherList.isEmpty()) {
             return true;
         } else {

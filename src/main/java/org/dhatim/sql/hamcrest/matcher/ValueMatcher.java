@@ -1,17 +1,19 @@
-package com.dhatim.sql.hamcrest.matcher;
+package org.dhatim.sql.hamcrest.matcher;
 
-import com.dhatim.sql.hamcrest.SqlQuery;
+import org.dhatim.sql.hamcrest.SqlQuery;
 import java.util.stream.Collectors;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.hamcrest.Description;
 
-public class ValueContainingMatcher<T> extends AbstractQueryMatcher {
+public class ValueMatcher<T> extends AbstractQueryMatcher {
 
     private final T value;
+    private final boolean quoted;
 
-    public ValueContainingMatcher(String name, String xpath, T value) {
+    public ValueMatcher(String name, String xpath, T value, boolean quoted) {
         super(name, xpath);
         this.value = value;
+        this.quoted = quoted;
     }
 
     @Override
@@ -21,12 +23,13 @@ public class ValueContainingMatcher<T> extends AbstractQueryMatcher {
 
     @Override
     protected boolean matchesSafelyDerived(SqlQuery item) {
-        return item.getTextStream().anyMatch(s -> s.contains(value.toString()));
+        String stringValue = quoted ? String.format("'%s'", value.toString()) : value.toString();
+        return item.getTextStream().anyMatch(stringValue::equals);
     }
 
     @Override
     protected void describeMismatchSafelyDerived(SqlQuery actual, Description mismatchDescription) {
-        mismatchDescription.appendText(getName());
+        mismatchDescription.appendText(getName() + " for ").appendValue(value);
         mismatchDescription.appendText(" was ");
         mismatchDescription.appendValueList("[", ",", "]", actual.children().map(ParseTree::getText).collect(Collectors.toList()));
     }

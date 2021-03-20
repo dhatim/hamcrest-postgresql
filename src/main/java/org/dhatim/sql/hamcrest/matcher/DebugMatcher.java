@@ -1,6 +1,6 @@
-package com.dhatim.sql.hamcrest.matcher;
+package org.dhatim.sql.hamcrest.matcher;
 
-import com.dhatim.sql.hamcrest.SqlQuery;
+import org.dhatim.sql.hamcrest.SqlQuery;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -12,7 +12,7 @@ public class DebugMatcher extends TypeSafeMatcher<SqlQuery> {
     public DebugMatcher(Matcher<SqlQuery> matcher) {
         this.matcher = matcher;
     }
-    
+
     @Override
     public void describeTo(Description description) {
         matcher.describeTo(description);

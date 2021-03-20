@@ -1,29 +1,27 @@
-package com.dhatim.sql.hamcrest.matcher;
+package org.dhatim.sql.hamcrest.matcher;
 
-import com.dhatim.sql.hamcrest.SqlQuery;
+import org.dhatim.sql.hamcrest.SqlQuery;
 import java.util.stream.Collectors;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.hamcrest.Description;
 
-public class StringMatcher extends AbstractQueryMatcher {
+public class TokenMatcher extends AbstractQueryMatcher {
 
-    private final String value;
-    private final boolean ignoreCase;
+    private final String token;
 
-    public StringMatcher(String name, String xpath, String value, boolean ignoreCase) {
+    public TokenMatcher(String name, String xpath, String token) {
         super(name, xpath);
-        this.value = value;
-        this.ignoreCase = ignoreCase;
+        this.token = token;
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText(getName()).appendText(" is ").appendValue(value);
+        description.appendText(getName()).appendText(" is ").appendText(token);
     }
 
     @Override
     protected boolean matchesSafelyDerived(SqlQuery item) {
-        return item.children().map(ParseTree::getText).anyMatch(ignoreCase ? value::equalsIgnoreCase : value::equals);
+        return item.getTextStream().anyMatch(token::equals);
     }
 
     @Override

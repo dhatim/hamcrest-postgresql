@@ -1,4 +1,4 @@
-package com.dhatim.sql.hamcrest.matcher;
+package org.dhatim.sql.hamcrest.matcher;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,7 +53,11 @@ public class AllMatcher<T> extends DiagnosingMatcher<T> {
     @SafeVarargs
     @Factory
     public static <T> Matcher<T> allOf(Matcher<? super T>... matchers) {
-        return allOf(Arrays.asList(matchers));
+        List<Matcher<? super T>> list = new ArrayList<Matcher<? super T>>(matchers.length);
+        for (Matcher<? super T> matcher : matchers) {
+            list.add(matcher);
+        }
+        return allOf(list);
     }
 
     /**
