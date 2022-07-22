@@ -12,6 +12,13 @@
     <description>Hamcrest-style matchers for PostgreSQL queries</description>
     <url>https://github.com/dhatim/hamcrest-postgresql</url>
 
+    <developers>
+        <developer>
+            <organization>Cegid</organization>
+            <organizationUrl>https://cegid.com/</organizationUrl>
+        </developer>
+    </developers>
+
     <licenses>
         <license>
             <name>The Apache License, Version 2.0</name>
