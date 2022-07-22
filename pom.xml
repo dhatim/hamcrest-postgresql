@@ -6,7 +6,9 @@
     <version>0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>Hamcrest-style matchers for Postgresql SQLs</name>
+
+    <name>Hamcrest PostgreSQL</name>
+    <description>Hamcrest-style matchers for PostgreSQL queries</description>
     <url>https://github.com/dhatim/hamcrest-postgresql</url>
 
     <licenses>
