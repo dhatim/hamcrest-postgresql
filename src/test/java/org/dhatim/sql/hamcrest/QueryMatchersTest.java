@@ -82,6 +82,12 @@ public class QueryMatchersTest {
     }
 
     @Test
+    public void testIntervalLiteral() {
+        assertThat(sql("SELECT INTERVAL '1 month'"), query(intervalLiteral("1 month")));
+        assertThat(sql("SELECT '1 month'::interval"), query(intervalLiteral("1 month")));
+    }
+
+    @Test
     public void testConds() {
         assertThat(sql("SELECT * FROM t1 WHERE col1 = 1"), query(where(equal(column("col1"), literal(1)))));
         assertThat(sql("SELECT * FROM t1 WHERE col1 > 1"), query(where(greater(column("col1"), literal(1)))));

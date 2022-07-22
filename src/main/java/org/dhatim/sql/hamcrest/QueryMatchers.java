@@ -273,7 +273,7 @@ public class QueryMatchers {
     }
 
     public static <T> Matcher<SqlQuery> intervalLiteral(String value) {
-        return xpath("interval", "//interval_literal/*", orderedAllOf(node("INTERVAL"), literal(value)));
+        return xpath("interval", "//interval_literal/*", literal(value));
     }
 
     public static <T> Matcher<SqlQuery> dateLiteral(String value) {
