@@ -330,10 +330,12 @@ datetime_literal
 
 time_literal
   : TIME time_string=Character_String_Literal
+  | time_string=Character_String_Literal CAST_EXPRESSION TIME
   ;
 
 timestamp_literal
   : TIMESTAMP timestamp_string=Character_String_Literal
+  | timestamp_string=Character_String_Literal CAST_EXPRESSION TIMESTAMP
   ;
 
 date_literal
@@ -343,6 +345,7 @@ date_literal
   
 interval_literal
   : INTERVAL interval_string=Character_String_Literal
+  | interval_string=Character_String_Literal CAST_EXPRESSION INTERVAL
   ;
 
 boolean_literal
