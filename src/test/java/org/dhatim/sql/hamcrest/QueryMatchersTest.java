@@ -72,11 +72,13 @@ public class QueryMatchersTest {
     @Test
     public void testUUIDLiteral() {
         assertThat(sql("SELECT UUID 'c96ff414-8559-484c-bd43-c978130a5ee4'"), query(uuidLiteral("c96ff414-8559-484c-bd43-c978130a5ee4")));
+        assertThat(sql("SELECT 'c96ff414-8559-484c-bd43-c978130a5ee4'::uuid"), query(uuidLiteral("c96ff414-8559-484c-bd43-c978130a5ee4")));
     }
 
     @Test
     public void testDateLiteral() {
         assertThat(sql("SELECT DATE '2010-10-10'"), query(dateLiteral("2010-10-10")));
+        assertThat(sql("SELECT '2010-10-10'::date"), query(dateLiteral("2010-10-10")));
     }
 
     @Test

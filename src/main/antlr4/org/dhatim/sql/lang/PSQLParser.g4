@@ -338,6 +338,7 @@ timestamp_literal
 
 date_literal
   : DATE date_string=Character_String_Literal
+  | date_string=Character_String_Literal CAST_EXPRESSION DATE
   ;
   
 interval_literal
@@ -350,6 +351,7 @@ boolean_literal
   
 uuid_literal
   : UUID uuid_string=Character_String_Literal
+  | uuid_string=Character_String_Literal CAST_EXPRESSION UUID
   ;
 
 /*
