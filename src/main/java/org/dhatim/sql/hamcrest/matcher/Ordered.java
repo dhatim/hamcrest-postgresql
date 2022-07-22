@@ -1,15 +1,14 @@
 package org.dhatim.sql.hamcrest.matcher;
 
 import org.dhatim.sql.hamcrest.SqlQuery;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeDiagnosingMatcher;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.hamcrest.Description;
-import org.hamcrest.Factory;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeDiagnosingMatcher;
 
 public class Ordered extends TypeSafeDiagnosingMatcher<SqlQuery> {
 
@@ -28,9 +27,9 @@ public class Ordered extends TypeSafeDiagnosingMatcher<SqlQuery> {
         }
 
         int lastRemoveIndex = 0;
-        for (int i=0; i<item.getChildren().size(); i++) {
+        for (int i = 0; i < item.getChildren().size(); i++) {
             //System.out.println("DEBUG for " + i + "/" + item.getChildren().size());
-            SqlQuery current = item.derive(i, i+1);
+            SqlQuery current = item.derive(i, i + 1);
 
             Matcher<? super SqlQuery> matcher = matcherList.getFirst();
             boolean match = matcher.matches(current);
@@ -64,7 +63,6 @@ public class Ordered extends TypeSafeDiagnosingMatcher<SqlQuery> {
      * For example:
      * <pre>assertThat("myValue", allOf(startsWith("my"), containsString("Val")))</pre>
      */
-    @Factory
     public static Matcher<SqlQuery> allOf(Iterable<Matcher<? super SqlQuery>> matchers) {
         return new Ordered(matchers);
     }
@@ -76,7 +74,6 @@ public class Ordered extends TypeSafeDiagnosingMatcher<SqlQuery> {
      * <pre>assertThat("myValue", allOf(startsWith("my"), containsString("Val")))</pre>
      */
     @SafeVarargs
-    @Factory
     public static Matcher<SqlQuery> allOf(Matcher<? super SqlQuery>... matchers) {
         return allOf(Arrays.asList(matchers));
     }
@@ -87,7 +84,6 @@ public class Ordered extends TypeSafeDiagnosingMatcher<SqlQuery> {
      * For example:
      * <pre>assertThat("myValue", allOf(startsWith("my"), containsString("Val")))</pre>
      */
-    @Factory
     public static Matcher<SqlQuery> allOf(Matcher<? super SqlQuery> first, Matcher<? super SqlQuery> second) {
         List<Matcher<? super SqlQuery>> matchers = new ArrayList<>(2);
         matchers.add(first);
@@ -101,7 +97,6 @@ public class Ordered extends TypeSafeDiagnosingMatcher<SqlQuery> {
      * For example:
      * <pre>assertThat("myValue", allOf(startsWith("my"), containsString("Val")))</pre>
      */
-    @Factory
     public static Matcher<SqlQuery> allOf(Matcher<? super SqlQuery> first, Matcher<? super SqlQuery> second, Matcher<? super SqlQuery> third) {
         List<Matcher<? super SqlQuery>> matchers = new ArrayList<>(3);
         matchers.add(first);
@@ -116,7 +111,6 @@ public class Ordered extends TypeSafeDiagnosingMatcher<SqlQuery> {
      * For example:
      * <pre>assertThat("myValue", allOf(startsWith("my"), containsString("Val")))</pre>
      */
-    @Factory
     public static Matcher<SqlQuery> allOf(Matcher<? super SqlQuery> first, Matcher<? super SqlQuery> second, Matcher<? super SqlQuery> third, Matcher<? super SqlQuery> fourth) {
         List<Matcher<? super SqlQuery>> matchers = new ArrayList<>(4);
         matchers.add(first);
@@ -132,7 +126,6 @@ public class Ordered extends TypeSafeDiagnosingMatcher<SqlQuery> {
      * For example:
      * <pre>assertThat("myValue", allOf(startsWith("my"), containsString("Val")))</pre>
      */
-    @Factory
     public static Matcher<SqlQuery> allOf(Matcher<? super SqlQuery> first, Matcher<? super SqlQuery> second, Matcher<? super SqlQuery> third, Matcher<? super SqlQuery> fourth, Matcher<? super SqlQuery> fifth) {
         List<Matcher<? super SqlQuery>> matchers = new ArrayList<>(5);
         matchers.add(first);
@@ -149,7 +142,6 @@ public class Ordered extends TypeSafeDiagnosingMatcher<SqlQuery> {
      * For example:
      * <pre>assertThat("myValue", allOf(startsWith("my"), containsString("Val")))</pre>
      */
-    @Factory
     public static Matcher<SqlQuery> allOf(Matcher<? super SqlQuery> first, Matcher<? super SqlQuery> second, Matcher<? super SqlQuery> third, Matcher<? super SqlQuery> fourth, Matcher<? super SqlQuery> fifth, Matcher<? super SqlQuery> sixth) {
         List<Matcher<? super SqlQuery>> matchers = new ArrayList<>(6);
         matchers.add(first);

@@ -1,10 +1,12 @@
 package org.dhatim.sql.hamcrest;
 
-import static org.hamcrest.Matchers.*;
-import static org.dhatim.sql.hamcrest.QueryMatchers.*;
-import static org.hamcrest.MatcherAssert.*;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Test;
+import static org.dhatim.sql.hamcrest.QueryMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
+
 
 public class QueryMatchersTest {
 

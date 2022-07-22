@@ -1,12 +1,11 @@
 package org.dhatim.sql.hamcrest.matcher;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import org.hamcrest.Description;
 import org.hamcrest.DiagnosingMatcher;
-import org.hamcrest.Factory;
 import org.hamcrest.Matcher;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AllMatcher<T> extends DiagnosingMatcher<T> {
 
@@ -22,7 +21,7 @@ public class AllMatcher<T> extends DiagnosingMatcher<T> {
             if (!matcher.matches(o)) {
                 //mismatch.appendDescriptionOf(matcher).appendText(" ");
                 matcher.describeMismatch(o, mismatch);
-              return false;
+                return false;
             }
         }
         return true;
@@ -39,7 +38,6 @@ public class AllMatcher<T> extends DiagnosingMatcher<T> {
      * For example:
      * <pre>assertThat("myValue", allOf(startsWith("my"), containsString("Val")))</pre>
      */
-    @Factory
     public static <T> Matcher<T> allOf(Iterable<Matcher<? super T>> matchers) {
         return new AllMatcher<T>(matchers);
     }
@@ -51,7 +49,6 @@ public class AllMatcher<T> extends DiagnosingMatcher<T> {
      * <pre>assertThat("myValue", allOf(startsWith("my"), containsString("Val")))</pre>
      */
     @SafeVarargs
-    @Factory
     public static <T> Matcher<T> allOf(Matcher<? super T>... matchers) {
         List<Matcher<? super T>> list = new ArrayList<Matcher<? super T>>(matchers.length);
         for (Matcher<? super T> matcher : matchers) {
@@ -66,7 +63,6 @@ public class AllMatcher<T> extends DiagnosingMatcher<T> {
      * For example:
      * <pre>assertThat("myValue", allOf(startsWith("my"), containsString("Val")))</pre>
      */
-    @Factory
     public static <T> Matcher<T> allOf(Matcher<? super T> first, Matcher<? super T> second) {
         List<Matcher<? super T>> matchers = new ArrayList<Matcher<? super T>>(2);
         matchers.add(first);
@@ -80,7 +76,6 @@ public class AllMatcher<T> extends DiagnosingMatcher<T> {
      * For example:
      * <pre>assertThat("myValue", allOf(startsWith("my"), containsString("Val")))</pre>
      */
-    @Factory
     public static <T> Matcher<T> allOf(Matcher<? super T> first, Matcher<? super T> second, Matcher<? super T> third) {
         List<Matcher<? super T>> matchers = new ArrayList<Matcher<? super T>>(3);
         matchers.add(first);
@@ -95,7 +90,6 @@ public class AllMatcher<T> extends DiagnosingMatcher<T> {
      * For example:
      * <pre>assertThat("myValue", allOf(startsWith("my"), containsString("Val")))</pre>
      */
-    @Factory
     public static <T> Matcher<T> allOf(Matcher<? super T> first, Matcher<? super T> second, Matcher<? super T> third, Matcher<? super T> fourth) {
         List<Matcher<? super T>> matchers = new ArrayList<Matcher<? super T>>(4);
         matchers.add(first);
@@ -111,7 +105,6 @@ public class AllMatcher<T> extends DiagnosingMatcher<T> {
      * For example:
      * <pre>assertThat("myValue", allOf(startsWith("my"), containsString("Val")))</pre>
      */
-    @Factory
     public static <T> Matcher<T> allOf(Matcher<? super T> first, Matcher<? super T> second, Matcher<? super T> third, Matcher<? super T> fourth, Matcher<? super T> fifth) {
         List<Matcher<? super T>> matchers = new ArrayList<Matcher<? super T>>(5);
         matchers.add(first);
@@ -128,7 +121,6 @@ public class AllMatcher<T> extends DiagnosingMatcher<T> {
      * For example:
      * <pre>assertThat("myValue", allOf(startsWith("my"), containsString("Val")))</pre>
      */
-    @Factory
     public static <T> Matcher<T> allOf(Matcher<? super T> first, Matcher<? super T> second, Matcher<? super T> third, Matcher<? super T> fourth, Matcher<? super T> fifth, Matcher<? super T> sixth) {
         List<Matcher<? super T>> matchers = new ArrayList<Matcher<? super T>>(6);
         matchers.add(first);
