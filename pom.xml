@@ -36,7 +36,7 @@
         <maven.compiler.source>18</maven.compiler.source>
         <maven.compiler.target>18</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <antlr.version>4.11.1</antlr.version>
+        <antlr.version>4.12.0</antlr.version>
     </properties>
 
     <dependencyManagement>
